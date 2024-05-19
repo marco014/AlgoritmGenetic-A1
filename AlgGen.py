@@ -215,7 +215,9 @@ def run_gui():
                 raise ValueError("DeltaX debe estar en el rango de 0 a 1.")
             if pop_size >= max_population:
                 raise ValueError("El número de individuos no debe ser mayor o igual al tamaño de la población máxima.")
-
+            if not (0 <= crossover_rate <= 1):
+                raise ValueError("La tasa de cruza debe estar en el rango de 0 a 1.")
+            
             # Limpiar imágenes de la carpeta 'gen_images'
             for filename in os.listdir('gen_images'):
                 file_path = os.path.join('gen_images', filename)
