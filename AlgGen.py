@@ -213,8 +213,8 @@ def run_gui():
                 raise ValueError("El valor inicial A no debe ser mayor o igual al valor final B.")
             if not (0 < delta_x <= 1):
                 raise ValueError("DeltaX debe estar en el rango de 0 a 1.")
-            if not (0 <= mutation_rate_gene <= 1):
-                raise ValueError("La probabilidad de mutación del gen debe estar en el rango de 0 a 1.")
+            if pop_size >= max_population:
+                raise ValueError("El número de individuos no debe ser mayor o igual al tamaño de la población máxima.")
 
             # Limpiar imágenes de la carpeta 'gen_images'
             for filename in os.listdir('gen_images'):
