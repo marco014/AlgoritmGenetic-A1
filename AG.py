@@ -121,10 +121,9 @@ class AlgoritmoGenetico:
             aptitudes = self.evaluar_poblacion(poblacion, num_bits, A, B)
             poblacion = self.podar_poblacion(poblacion, aptitudes, min(tam_poblacion, max_poblacion))
 
-            GraficoEvolucion.generar_grafico(mejores_aptitudes, generacion, 'Maximización')
+            GraficoEvolucion.generar_grafico(mejores_aptitudes, peores_aptitudes, aptitudes_promedio, generacion, 'Maximización')
 
         VideoCreador.crear_video('gen_images', 'evolucion_maximizacion.mp4')
-        GraficoEvolucion.generar_grafico_fitness(mejores_aptitudes, peores_aptitudes, aptitudes_promedio)
 
     # Algoritmo Genético para minimizar la aptitud
     def minimizar_aptitud(self, A, B, delta_x, generaciones, tam_poblacion, max_poblacion):
@@ -174,10 +173,9 @@ class AlgoritmoGenetico:
             aptitudes = self.evaluar_poblacion(poblacion, num_bits, A, B)
             poblacion = self.podar_poblacion(poblacion, aptitudes, min(tam_poblacion, max_poblacion))
 
-            GraficoEvolucion.generar_grafico(mejores_aptitudes, generacion, 'Minimización')
+            GraficoEvolucion.generar_grafico(mejores_aptitudes, peores_aptitudes, aptitudes_promedio, generacion, 'Minimización')
 
         VideoCreador.crear_video('gen_images', 'evolucion_minimizacion.mp4')
-        GraficoEvolucion.generar_grafico_fitness(mejores_aptitudes, peores_aptitudes, aptitudes_promedio)
 
 # Clase para actualizar la tabla
 class ActualizadorTabla:
@@ -188,29 +186,17 @@ class ActualizadorTabla:
 # Clase para generar gráficos de evolución
 class GraficoEvolucion:
     @staticmethod
-    def generar_grafico(mejores_aptitudes, generacion, tipo):
+    def generar_grafico(mejores_aptitudes, peores_aptitudes, aptitudes_promedio, generacion, tipo):
         plt.figure(figsize=(10, 6))
         plt.plot(mejores_aptitudes, label='Mejor aptitud')
+        plt.plot(peores_aptitudes, label='Peor aptitud')
+        plt.plot(aptitudes_promedio, label='Aptitud promedio')
         plt.xlabel('Generación')
         plt.ylabel('Aptitud')
         plt.title(f'Evolución de la Aptitud de la Población ({tipo}) - Generación {generacion}')
         plt.legend()
         plt.savefig(f'gen_images/gen_{generacion}.png')
         plt.close()
-
-    @staticmethod
-    def generar_grafico_fitness(mejores_aptitudes, peores_aptitudes, aptitudes_promedio):
-        plt.figure(figsize=(10, 6))
-        generaciones = list(range(len(mejores_aptitudes)))
-        plt.plot(generaciones, mejores_aptitudes, label='Mejor Fitness', marker='o')
-        plt.plot(generaciones, peores_aptitudes, label='Peor Fitness', marker='o')
-        plt.plot(generaciones, aptitudes_promedio, label='Fitness Promedio', marker='o')
-        plt.xlabel('Generación')
-        plt.ylabel('Fitness')
-        plt.title('Evolución del Fitness a lo largo de las Generaciones')
-        plt.legend()
-        plt.savefig('fitness_evolucion.png')
-        plt.show()
 
 # Clase para crear videos
 class VideoCreador:
@@ -256,11 +242,11 @@ def iniciar_gui():
     root = tk.Tk()
     root.title("Algoritmo Genético")
 
-    tk.Label(root, text="Valor de A:").grid(row=0, column=0)
+    tk.Label(root, text="Valor de Inicial:").grid(row=0, column=0)
     entrada_A = tk.Entry(root)
     entrada_A.grid(row=0, column=1)
 
-    tk.Label(root, text="Valor de B:").grid(row=1, column=0)
+    tk.Label(root, text="Valor de Final:").grid(row=1, column=0)
     entrada_B = tk.Entry(root)
     entrada_B.grid(row=1, column=1)
 
